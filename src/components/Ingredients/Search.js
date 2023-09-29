@@ -9,13 +9,15 @@ const Search = React.memo(props => {
   const inputRef = useRef();
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (enteredFilter === inputRef.current.value) {
-        const query = 
-        enteredFilter.length === 0
-        ? '' 
-        : `?orderedBy="title"&equalTo="${enteredFilter}"`;
-        fetch('https://react-hooks-update.firebaseio.com/ingredients.json' + query)
+        const query =
+          enteredFilter.length === 0
+            ? ''
+            : `?orderBy="title"&equalTo="${enteredFilter}"`;
+        fetch(
+          'https://react-hooks-update.firebaseio.com/ingredients.json' + query
+        )
           .then(response => response.json())
           .then(responseData => {
             const loadedIngredients = [];
@@ -30,6 +32,9 @@ const Search = React.memo(props => {
           });
       }
     }, 500);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [enteredFilter, onLoadIngredients, inputRef]);
 
   return (
@@ -37,9 +42,9 @@ const Search = React.memo(props => {
       <Card>
         <div className="search-input">
           <label>Filter by Title</label>
-          <input 
+          <input
             ref={inputRef}
-            type="text" 
+            type="text"
             value={enteredFilter}
             onChange={event => setEnteredFilter(event.target.value)}
           />
